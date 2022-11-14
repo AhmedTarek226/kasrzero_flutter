@@ -3,7 +3,37 @@ import 'package:kasrzero_flutter/constants.dart';
 import 'package:kasrzero_flutter/models/user_data.dart';
 import 'package:http/http.dart' as http;
 
+import '../functions.dart';
+import '../models/product.dart';
+
 class UserService {
+   Future<List<Product>> getuserAds(String id) async {
+    Uri url = Uri.http(KLocalhost,"/product/ads/$id");
+
+    var resp = await http.get(url);
+    var data = jsonDecode(resp.body);
+    var list = data as List;
+    return list
+        .map((e) => Product(
+            id: e["_id"],
+            userId: e["userId"],
+            categoryId: e["categoryId"],
+            title: e["title"],
+            price: e["price"],
+            description: e["description"],
+            brand: e["brand"],
+            color: e["color"],
+            durationOfUse: e["durationOfUse"],
+            img: imageFormat(e["img"]),
+            status: e["status"],
+            ableToExchange: e["ableToExchange"],
+            firstFilter: e["firstFilter"],
+            secondFilter: e["secondFilter"],
+            thirdFilter: e["thirdFilter"],
+            offers: e['offers'],
+            time: e['time']))
+        .toList();
+  }
   Future<UserData>getUser(String email) async {
     Uri url = Uri.http(KLocalhost, "/user/getUser/$email");
     var res = await http.get(url);

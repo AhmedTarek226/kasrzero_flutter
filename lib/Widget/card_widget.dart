@@ -39,6 +39,7 @@ const h5Style = TextStyle(
 
 class FurnitureListView extends StatelessWidget {
   final bool isHorizontal;
+  final String isslected;
   final Function(Product Product)? onTap;
   final List<Product> ProductList;
 
@@ -46,6 +47,7 @@ class FurnitureListView extends StatelessWidget {
       {Key? key,
       this.isHorizontal = true,
       this.onTap,
+      this.isslected = "",
       required this.ProductList})
       : super(key: key);
 
@@ -60,7 +62,7 @@ class FurnitureListView extends StatelessWidget {
     );
   }
 
-  Widget _listViewItem(Product product, int index) {
+  Widget _listViewItem(Product product, int index , String idpro) {
     Widget widget;
     widget = isHorizontal == true
         ? Column(
@@ -74,34 +76,38 @@ class FurnitureListView extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Card(
               color: Colors.white,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _furnitureImage(product.img[0]),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(product.title, style: h4Style),
-                          const SizedBox(height: 5),
-                          Text(
-                            product.description,
-                            style: h5Style.copyWith(fontSize: 12),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            '${product.price} EGP',
-                            style: h4Styleo,
-                          )
-                        ],
+              child: Container(
+                decoration: BoxDecoration(border: Border.all(color: (isslected==idpro?Colors.orangeAccent:Colors.transparent)),
+                borderRadius: BorderRadius.circular(5)),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _furnitureImage(product.img[0]),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(product.title, style: h4Style),
+                            const SizedBox(height: 5),
+                            Text(
+                              product.description,
+                              style: h5Style.copyWith(fontSize: 12),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 5),
+                            Text(
+                              '${product.price} EGP',
+                              style: h4Styleo,
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
           );
@@ -122,7 +128,7 @@ class FurnitureListView extends StatelessWidget {
               itemCount: ProductList.length,
               itemBuilder: (_, index) {
                 Product furniture = ProductList[index];
-                return _listViewItem(furniture, index);
+                return _listViewItem(furniture, index,furniture.id);
               },
               separatorBuilder: (BuildContext context, int index) {
                 return const Padding(
@@ -140,7 +146,7 @@ class FurnitureListView extends StatelessWidget {
               Product product = ProductList[index];
               return Padding(
                 padding: const EdgeInsets.only(bottom: 0),
-                child: _listViewItem(product, index),
+                child:  _listViewItem(product, index,product.id),
               );
             },
           );
