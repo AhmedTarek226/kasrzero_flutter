@@ -52,10 +52,25 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
     // });
   }
 
+  _createExchangingOrder(ExchangingOrder order) async {
+    // setState(() {
+    //   isLoading = true;
+    // });
+    var res = await _orderApi.createExchangingOrder(order);
+    print(res.body);
+    // Navigator.pushReplacementNamed(context, '/finish_order');
+
+    // setState(() {
+    //   isLoading = false;
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Product> _products =
-        ModalRoute.of(context)?.settings.arguments as List<Product>;
+    List args = ModalRoute.of(context)?.settings.arguments as List;
+    List<Product> _products = args.length > 1
+        ? [args[0] as Product, args[1] as Product]
+        : [args[0] as Product];
     final currentUser = Provider.of<UserProvider>(context).getUser();
     return SafeArea(
       child: Scaffold(
@@ -248,58 +263,145 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                               color: Colors.grey[300],
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              DefaultButton(
-                                text: "Buy COD",
-                                press: () async {
-                                  if (_products.length > 1) {
-                                    // create offer
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-                                    final _productsApi = ProductApi();
-                                    var res = await _productsApi.sendOffer(
-                                        _products[0].id, _products[1].id);
-                                    if (res.body != "failed") {
-                                      Navigator.pushReplacementNamed(
-                                          context, '/finish_offer');
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              content: Text(
-                                                  "The offer failed to send !")));
-                                    }
-                                    setState(() {
-                                      isLoading = false;
-                                    });
-                                  } else {
-                                    BuyingOrder _newBuyingOrder = BuyingOrder(
-                                        addressto: currentUser.address,
-                                        buyerId: currentUser.id,
-                                        productId: _products[0].id,
-                                        productPrice: _products[0].price,
-                                        profit: getTaxes(_products[0].price),
-                                        sellerId: _products[0].userId,
-                                        shipping: shipping,
-                                        paymentmethod: "cod");
-                                    _createBuyingOrder(_newBuyingOrder);
-                                  }
-                                },
-                              ),
-                              DefaultButton(
-                                text: "Buy Credit",
-                                press: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              paypalWIdget(totalprise: 100)));
-                                },
-                              ),
-                            ],
-                          ),
+                          child: _products.length > 1
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    DefaultButton(
+                                      text: args[2] == true
+                                          ? "Send Offer"
+                                          : "Accept",
+                                      press: () async {
+                                        // if offer
+                                        // else if order
+                                        if (args[2] == true) {
+                                          // create offer
+                                          setState(() {
+                                            isLoading = true;
+                                          });
+                                          final _productsApi = ProductApi();
+                                          var res =
+                                              await _productsApi.sendOffer(
+                                                  _products[0].id,
+                                                  _products[1].id);
+                                          if (res.body != "failed") {
+                                            Navigator.pushReplacementNamed(
+                                                context, '/finish_offer');
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        "The offer failed to send !")));
+                                          }
+                                          setState(() {
+                                            isLoading = false;
+                                          });
+                                        } else {
+                                          // create exchange order
+                                          ExchangingOrder _newExchangingOrder =
+                                              ExchangingOrder(
+                                                  addressto:
+                                                      currentUser.address,
+                                                  buyerId: currentUser.id,
+                                                  productId: _products[0].id,
+                                                  productPrice:
+                                                      _products[0].price,
+                                                  profit: getTaxes(
+                                                      _products[0].price),
+                                                  sellerId: _products[1].userId,
+                                                  shipping: shipping,
+                                                  paymentmethod: "cod",
+                                                  exchangable: true,
+                                                  exchangeProperties:
+                                                      ExchangeProperties(
+                                                    paymentmethod: "cod",
+                                                    productId: _products[1].id,
+                                                    productPrice:
+                                                        _products[1].price,
+                                                    profit: getTaxes(
+                                                        _products[1].price),
+                                                    shipping: shipping,
+                                                  ));
+                                          _createExchangingOrder(
+                                              _newExchangingOrder);
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                )
+                              : Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    DefaultButton(
+                                        text: "Buy COD",
+                                        press: () async {
+                                          // if (_products.length > 1) {
+                                          //   // create offer
+                                          //   setState(() {
+                                          //     isLoading = true;
+                                          //   });
+                                          //   final _productsApi = ProductApi();
+                                          //   var res = await _productsApi.sendOffer(
+                                          //       _products[0].id, _products[1].id);
+                                          //   if (res.body != "failed") {
+                                          //     Navigator.pushReplacementNamed(
+                                          //         context, '/finish_offer');
+                                          //   } else {
+                                          //     ScaffoldMessenger.of(context)
+                                          //         .showSnackBar(SnackBar(
+                                          //             content: Text(
+                                          //                 "The offer failed to send !")));
+                                          //   }
+                                          //   setState(() {
+                                          //     isLoading = false;
+                                          //   });
+                                          // } else {
+                                          BuyingOrder _newBuyingOrder =
+                                              BuyingOrder(
+                                                  addressto:
+                                                      currentUser.address,
+                                                  buyerId: currentUser.id,
+                                                  productId: _products[0].id,
+                                                  productPrice:
+                                                      _products[0].price,
+                                                  profit: getTaxes(
+                                                      _products[0].price),
+                                                  sellerId: _products[0].userId,
+                                                  shipping: shipping,
+                                                  paymentmethod: "cod");
+                                          _createBuyingOrder(_newBuyingOrder);
+                                        }
+                                        // },
+                                        ),
+                                    DefaultButton(
+                                      text: "Buy Credit",
+                                      press: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    paypalWIdget(
+                                                        totalprise: 100)));
+                                        // paymentmethod credit
+                                        // create order
+                                        BuyingOrder _newBuyingOrder =
+                                            BuyingOrder(
+                                                addressto: currentUser.address,
+                                                buyerId: currentUser.id,
+                                                productId: _products[0].id,
+                                                productPrice:
+                                                    _products[0].price,
+                                                profit: getTaxes(
+                                                    _products[0].price),
+                                                sellerId: _products[0].userId,
+                                                shipping: shipping,
+                                                paymentmethod: "credit");
+                                        _createBuyingOrder(_newBuyingOrder);
+                                      },
+                                    ),
+                                  ],
+                                ),
                         ))
                   ],
                 ),

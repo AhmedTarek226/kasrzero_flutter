@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:kasrzero_flutter/Widget/card_widget.dart';
 import 'package:kasrzero_flutter/Widget/detailsWidget/default_button.dart';
+import 'package:kasrzero_flutter/constants.dart';
 import 'package:kasrzero_flutter/models/product.dart';
 import 'package:kasrzero_flutter/services/user_service.dart';
 
@@ -42,7 +43,8 @@ class _listofadsState extends State<listofads> {
   void initState() {
     userserve.getuserAds(widget.id).then(((value) {
       setState(() {
-        widget.ads = value;
+        widget.ads =
+            value.where((element) => element.status == "active").toList();
       });
     }));
   }
@@ -68,18 +70,19 @@ class _listofadsState extends State<listofads> {
                 });
               },
             )),
-        isslect != ""
-            ? Padding(
-                padding: EdgeInsets.all(10),
-                child: DefaultButton(
-                  text: "Confirm offer",
-                  press: () {
-                    Navigator.of(context).pushNamed("/confirm_order",
-                        arguments: [widget.sellerProduct, pro]);
-                  },
-                ),
-              )
-            : Container()
+        Padding(
+          padding: EdgeInsets.all(10),
+          child: DefaultButton(
+            color: isslect != "" ? KPrimaryColor : Colors.black54,
+            text: "Send offer",
+            press: () {
+              if (isslect != "") {
+                Navigator.of(context).pushNamed("/confirm_order",
+                    arguments: [widget.sellerProduct, pro, true]);
+              }
+            },
+          ),
+        )
       ],
     );
   }

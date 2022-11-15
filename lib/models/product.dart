@@ -64,7 +64,7 @@ class Product {
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
+        "_id": id,
         "ableToExchange": ableToExchange,
         "brand": brand,
         "categoryId": categoryId,

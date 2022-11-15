@@ -6,9 +6,11 @@ class DefaultButton extends StatelessWidget {
     Key? key,
     this.text,
     this.press,
+    this.color = KPrimaryColor
   }) : super(key: key);
   final String? text;
   final Function? press;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,7 @@ class DefaultButton extends StatelessWidget {
       height: getProportionateScreenHeight(46),
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(KPrimaryColor),
+          backgroundColor: MaterialStateProperty.all<Color>(color),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(50),

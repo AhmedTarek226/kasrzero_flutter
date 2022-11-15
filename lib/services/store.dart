@@ -151,8 +151,9 @@ class ProductApi {
     // print(p);
   }
 
-  Future<http.Response> sendOffer(String wanted,String offered)async{
-    var url = Uri.parse("http://$KLocalhost/product/sendoffer/$wanted/$offered");
+  Future<http.Response> sendOffer(String wanted, String offered) async {
+    var url =
+        Uri.parse("http://$KLocalhost/product/sendoffer/$wanted/$offered");
 
     return await http.post(url,
         body: "",
@@ -179,7 +180,39 @@ class OrderApi {
       "addresstoCity": order.addressto.city,
       "paymentmethod": order.paymentmethod
     };
-    var url = Uri.parse("http://$KLocalhost/order/createBuyingOrder");
+    var url = Uri.parse("http://$KLocalhost/order/mobileCreateBuyingOrder");
+
+    return await http.post(url,
+        body: body,
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        encoding: Encoding.getByName("utf-8"));
+  }
+
+  Future<http.Response> createExchangingOrder(ExchangingOrder order) async {
+    Map<String, String> body = {
+      "buyerId": order.buyerId,
+      "sellerId": order.sellerId,
+      "productId": order.productId,
+      "productPrice": order.productPrice.toString(),
+      "profit": order.profit.toString(),
+      "shipping": order.shipping.toString(),
+      "addresstoBlockNumber": order.addressto.blockNumber.toString(),
+      "addresstoSt": order.addressto.st,
+      "addresstoArea": order.addressto.area,
+      "addresstoCity": order.addressto.city,
+      "paymentmethod": "cod",
+      "exchangable": order.exchangable.toString(),
+      "exchangeProp_productId": order.exchangeProperties.productId,
+      "exchangeProp_productPrice":
+          order.exchangeProperties.productPrice.toString(),
+      "exchangeProp_paymentmethhod": "cod",
+      "exchangeProp_profit": order.exchangeProperties.profit.toString(),
+      "exchangeProp_shipping": order.exchangeProperties.shipping.toString(),
+    };
+    var url = Uri.parse("http://$KLocalhost/order/mobileCreateExchangingOrder");
 
     return await http.post(url,
         body: body,

@@ -5,11 +5,12 @@ import 'package:kasrzero_flutter/models/product.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kasrzero_flutter/services/store.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import '../Widget/detailsWidget/custom_app_bar.dart';
 import '../Widget/exchange_products_widgets/my_product_widget.dart';
 import '../functions.dart';
 
 class ExchangeProductsScreen extends StatefulWidget {
-  ExchangeProductsScreen({super.key});
+  const ExchangeProductsScreen({super.key});
 
   @override
   State<ExchangeProductsScreen> createState() => _ExchangeProductsScreenState();
@@ -19,60 +20,44 @@ class _ExchangeProductsScreenState extends State<ExchangeProductsScreen> {
   List<Product> products = Dummy_products;
   String offer = "";
   final productsStore = ProductApi();
-  final productId = "6362894c3dcf675a3e09b2f0";
-  bool isLoading = true;
+  // final productId = "6362894c3dcf675a3e09b2f0";
+  bool isLoading = false;
   int difference = 0;
-  final product = Dummy_products[0];
+  // final product = Dummy_products[0];
 
   @override
   void initState() {
-    getOffers();
-    setState(() {
-      isLoading = false;
-    });
+    // getOffers();
+    // setState(() {
+    //   isLoading = false;
+    // });
     super.initState();
   }
 
-  getOffers() async {
-    // setState(() {
-    //   isLoading = true;
-    // });
-    List<Product> prods = await productsStore.getOffers(productId);
-    setState(() {
-      products = prods;
-      offer = products[0].id;
-      difference = product.price - products[0].price;
-      // isLoading = false;
-    });
-  }
+  // getOffers() async {
+  //   // setState(() {
+  //   //   isLoading = true;
+  //   // });
+  //   List<Product> prods = await productsStore.getOffers(widget.product.id);
+  //   setState(() {
+  //     products = prods;
+  //     offer = products[0].id;
+  //     difference = widget.product.price - products[0].price;
+  //     // isLoading = false;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
+    List<Product> products =
+        ModalRoute.of(context)!.settings.arguments as List<Product>;
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: KPrimaryColor,
-          leadingWidth: 30.w,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(AppBar().preferredSize.height),
+          child: CustomAppBar(
+            Title: "Available offers",
           ),
-          title: Text(
-            "Available offers",
-            style: TextStyle(fontSize: 18.sp),
-          ),
-          actions: [
-            offer != null
-                ? IconButton(
-                    icon: Icon(Icons.check),
-                    onPressed: () {
-                      // todo //confirm offer
-                    },
-                  )
-                : Container(),
-          ],
         ),
         body: isLoading
             ? Center(
@@ -83,7 +68,7 @@ class _ExchangeProductsScreenState extends State<ExchangeProductsScreen> {
               )
             : Column(
                 children: [
-                  MyProductWidget(),
+                  MyProductWidget(myProduct: products[0]),
                   Divider(
                     height: 10.h,
                     color: KPrimaryColor,
@@ -102,21 +87,20 @@ class _ExchangeProductsScreenState extends State<ExchangeProductsScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[100],
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10.0),
-                                      ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10.0),
                                     ),
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 5.w),
-                                    height: 150.h,
-                                    width: 150.w,
-                                    child: Text(products[index].img[0])
-                                    // Image.network(
-                                    //     fit: BoxFit.contain,
-                                    //     "http://$KLocalhost/${imageFormat(products[index].img[0])}"),
-                                    ),
+                                  ),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 5.w),
+                                  height: 150.h,
+                                  width: 150.w,
+                                  child: Image.network(
+                                      fit: BoxFit.contain,
+                                      "http://$KLocalhost/${oneImageFormat(products[index + 1].img[0])}"),
+                                ),
                                 Flexible(
                                   child: Container(
                                     padding:
@@ -126,7 +110,7 @@ class _ExchangeProductsScreenState extends State<ExchangeProductsScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          products[index].title,
+                                          products[index + 1].title,
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                           style: TextStyle(
@@ -138,7 +122,7 @@ class _ExchangeProductsScreenState extends State<ExchangeProductsScreen> {
                                           height: 11.h,
                                         ),
                                         Text(
-                                          products[index].durationOfUse,
+                                          products[index + 1].durationOfUse,
                                           // capitalize("Used 3 years"),
                                           style:
                                               TextStyle(color: Colors.black54),
@@ -147,7 +131,7 @@ class _ExchangeProductsScreenState extends State<ExchangeProductsScreen> {
                                           height: 5.h,
                                         ),
                                         Text(
-                                          products[index].categoryId,
+                                          products[index + 1].categoryId,
                                           style:
                                               TextStyle(color: Colors.black54),
                                           overflow: TextOverflow.ellipsis,
@@ -157,7 +141,7 @@ class _ExchangeProductsScreenState extends State<ExchangeProductsScreen> {
                                           height: 5.h,
                                         ),
                                         Text(
-                                          products[index].color,
+                                          products[index + 1].color,
                                           style:
                                               TextStyle(color: Colors.black54),
                                         ),
@@ -165,7 +149,7 @@ class _ExchangeProductsScreenState extends State<ExchangeProductsScreen> {
                                           height: 11.h,
                                         ),
                                         Text(
-                                          "${products[index].price} EGP",
+                                          "${products[index + 1].price} EGP",
                                           style: TextStyle(
                                               color: KPrimaryColor,
                                               fontSize: 14.sp,
@@ -179,7 +163,7 @@ class _ExchangeProductsScreenState extends State<ExchangeProductsScreen> {
                                   width: 30.w,
                                   height: 30.h,
                                   child: Radio(
-                                    value: products[index].id,
+                                    value: products[index + 1].id,
                                     groupValue: offer,
                                     // toggleable: true,
                                     activeColor: KPrimaryColor,
@@ -187,8 +171,8 @@ class _ExchangeProductsScreenState extends State<ExchangeProductsScreen> {
                                     onChanged: (value) {
                                       setState(() {
                                         offer = value.toString();
-                                        difference = product.price -
-                                            products[index].price;
+                                        difference = products[0].price -
+                                            products[index + 1].price;
                                         print(offer);
                                       });
                                       // print(selected); //selected value
@@ -200,7 +184,7 @@ class _ExchangeProductsScreenState extends State<ExchangeProductsScreen> {
                           ),
                         );
                       },
-                      itemCount: products.length,
+                      itemCount: products.length - 1,
                     ),
                   ),
                   Container(
@@ -241,93 +225,104 @@ class _ExchangeProductsScreenState extends State<ExchangeProductsScreen> {
                             ),
                             child: const Text("Accept offer"),
                             onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text('Accept this offer ?'),
-                                    content: Container(
-                                      height: 100.h,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: const [
-                                              Text(
-                                                'Product price: ',
-                                              ),
-                                              Text(
-                                                'Difference: ',
-                                              ),
-                                              Text(
-                                                'Shipping: ',
-                                              ),
-                                              Text(
-                                                'Taxes: ',
-                                              ),
-                                            ],
-                                          ),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                '14000 EGP',
-                                              ),
-                                              Text(
-                                                '2000 EGP',
-                                              ),
-                                              Text(
-                                                '50 EGP',
-                                              ),
-                                              Text(
-                                                '100 EGP',
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    actions: <Widget>[
-                                      ElevatedButton(
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    KPrimaryColor)),
-                                        child: const Text('Cancel'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      ElevatedButton(
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    Colors.black87)),
-                                        child: const Text('Confirm'),
-                                        onPressed: () {
-                                          Product selectedProduct =
-                                              products.firstWhere((element) =>
-                                                  element.id == offer);
-                                          Navigator.pushNamed(
-                                              context, "/confirm_order",
-                                              arguments: ScreenArguments(
-                                                  currentProduct: product,
-                                                  selectedProduct:
-                                                      selectedProduct));
-                                        },
-                                      )
-                                    ],
-                                  );
-                                },
-                              );
+                              if (offer != "") {
+                                Product selectedProduct = products.firstWhere(
+                                    (element) => element.id == offer);
+                                Navigator.pushNamed(context, "/confirm_order",
+                                    arguments: [
+                                      products[0],
+                                      selectedProduct,
+                                      false
+                                    ]);
+                              }
+
+                              // showDialog(
+                              //   context: context,
+                              //   builder: (context) {
+                              //     return AlertDialog(
+                              //       title: Text('Accept this offer ?'),
+                              //       content: Container(
+                              //         height: 100.h,
+                              //         child: Row(
+                              //           mainAxisAlignment:
+                              //               MainAxisAlignment.spaceBetween,
+                              //           children: [
+                              //             Column(
+                              //               mainAxisAlignment:
+                              //                   MainAxisAlignment.spaceBetween,
+                              //               crossAxisAlignment:
+                              //                   CrossAxisAlignment.start,
+                              //               children: const [
+                              //                 Text(
+                              //                   'Product price: ',
+                              //                 ),
+                              //                 Text(
+                              //                   'Difference: ',
+                              //                 ),
+                              //                 Text(
+                              //                   'Shipping: ',
+                              //                 ),
+                              //                 Text(
+                              //                   'Taxes: ',
+                              //                 ),
+                              //               ],
+                              //             ),
+                              //             Column(
+                              //               mainAxisAlignment:
+                              //                   MainAxisAlignment.spaceBetween,
+                              //               crossAxisAlignment:
+                              //                   CrossAxisAlignment.start,
+                              //               children: [
+                              //                 Text(
+                              //                   '14000 EGP',
+                              //                 ),
+                              //                 Text(
+                              //                   '2000 EGP',
+                              //                 ),
+                              //                 Text(
+                              //                   '50 EGP',
+                              //                 ),
+                              //                 Text(
+                              //                   '100 EGP',
+                              //                 ),
+                              //               ],
+                              //             ),
+                              //           ],
+                              //         ),
+                              //       ),
+                              //       actions: <Widget>[
+                              //         ElevatedButton(
+                              //           style: ButtonStyle(
+                              //               backgroundColor:
+                              //                   MaterialStateProperty.all(
+                              //                       KPrimaryColor)),
+                              //           child: const Text('Cancel'),
+                              //           onPressed: () {
+                              //             Navigator.of(context).pop();
+                              //           },
+                              //         ),
+                              //         ElevatedButton(
+                              //           style: ButtonStyle(
+                              //               backgroundColor:
+                              //                   MaterialStateProperty.all(
+                              //                       Colors.black87)),
+                              //           child: const Text('Confirm'),
+                              //           onPressed: () {
+                              //             Product selectedProduct =
+                              //                 products.firstWhere((element) =>
+                              //                     element.id == offer);
+                              //             Navigator.pushNamed(
+                              //                 context, "/confirm_order",
+                              //                 arguments: ScreenArguments(
+                              //                     currentProduct: products[0],
+                              //                     selectedProduct:
+                              //                         selectedProduct));
+                              //           },
+                              //         )
+                              //       ],
+                              //     );
+                              //   },
+                              // );
                             },
                           ),
                         ),

@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:kasrzero_flutter/Widget/detailsWidget/default_button.dart';
 import 'package:kasrzero_flutter/functions.dart';
+import 'package:kasrzero_flutter/services/store.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import '../Widget/card_widget.dart';
@@ -60,6 +61,14 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
           headers: {"Content-Type": "application/json"});
       // add item to the list
       setState(() {});
+    }
+
+    Future<List<Product>> getOffers(String productId) async {
+      // setState(() {
+      //   isLoading = true;
+      // });
+      final productsStore = ProductApi();
+      return await productsStore.getOffers(productId);
     }
 
     return Scaffold(
@@ -257,10 +266,22 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                                                                   color: Colors
                                                                       .white),
                                                             ),
-                                                            onPressed: () {
+                                                            onPressed:
+                                                                () async {
+                                                              // setState(() {
+
+                                                              // });
+                                                              List<Product>
+                                                                  prods =
+                                                                  await getOffers(
+                                                                      item.id);
+                                                              prods.insert(
+                                                                  0, item);
                                                               Navigator.pushNamed(
                                                                   context,
-                                                                  '/exchange_products');
+                                                                  '/exchange_products',
+                                                                  arguments:
+                                                                      prods);
                                                             },
                                                           ),
                                                         ))

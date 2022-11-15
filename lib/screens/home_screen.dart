@@ -147,9 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
         filterprovider.setfilterno();
       }
-    } else {
-      
-    }
+    } else {}
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -168,25 +166,25 @@ class _HomeScreenState extends State<HomeScreen> {
                       secondaryButtonWidget: Icon(Icons.arrow_back),
                       trailingWidget: Icon(Icons.close),
                       onChanged: (String value) {
-                      if(SelectedCategory==""){
+                        if (SelectedCategory == "") {
                           List<Product> sear = pro1.where((element) {
-                          final tital = element.title.toLowerCase();
-                          final inpout = value.toLowerCase();
-                          return tital.contains(inpout);
-                        }).toList();
-                        setState(() {
-                          pro = sear;
-                        });
-                      }else{
-                        List<Product> sear = catpro.where((element) {
-                          final tital = element.title.toLowerCase();
-                          final inpout = value.toLowerCase();
-                          return tital.contains(inpout);
-                        }).toList();
-                        setState(() {
-                          pro = sear;
-                        });
-                      }
+                            final tital = element.title.toLowerCase();
+                            final inpout = value.toLowerCase();
+                            return tital.contains(inpout);
+                          }).toList();
+                          setState(() {
+                            pro = sear;
+                          });
+                        } else {
+                          List<Product> sear = catpro.where((element) {
+                            final tital = element.title.toLowerCase();
+                            final inpout = value.toLowerCase();
+                            return tital.contains(inpout);
+                          }).toList();
+                          setState(() {
+                            pro = sear;
+                          });
+                        }
                       },
                       onFieldSubmitted: (String value) {
                         List<Product> sear = pro1
@@ -247,28 +245,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       ))
                   .toList()
             ])),
-            // InkWell(
-            //     onTap: () => {getcatpro(e.id)},
-            //     child: Padding(
-            //       padding:
-            //           const EdgeInsets.symmetric(horizontal: 8),
-            //       child: Chip(
-            //         label: Text(e.title),
-            //         backgroundColor: Colors.white,
-            //         labelStyle: TextStyle(color: Colors.grey),
-            //       ),
-            //     ))
-            Expanded(
-                flex: 7,
-                child: FurnitureListView(
-                  ProductList: pro,
-                  isHorizontal: false,
-                  onTap: (Product) {
-                    print(Product.title);
-                    Navigator.of(context)
-                        .pushNamed("/product", arguments: Product);
-                  },
-                ))
+            pro.isEmpty
+                ? Expanded(
+                    flex: 7,
+                    child: Center(
+                      child: Text("No Products"),
+                    ))
+                : Expanded(
+                    flex: 7,
+                    child: FurnitureListView(
+                      ProductList: pro,
+                      isHorizontal: false,
+                      onTap: (Product) {
+                        print(Product.title);
+                        Navigator.of(context)
+                            .pushNamed("/product", arguments: Product);
+                      },
+                    ))
           ],
         ),
       ),

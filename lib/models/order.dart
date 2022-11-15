@@ -25,15 +25,15 @@ class ExchangingOrder {
   String buyerId;
   String sellerId;
   String productId;
-  String productPrice;
+  int productPrice;
   int profit;
   int shipping;
-  UserAddress addressfrom;
   UserAddress addressto;
   bool exchangable;
   ExchangeProperties exchangeProperties;
+  String paymentmethod;
+
   ExchangingOrder({
-    required this.addressfrom,
     required this.addressto,
     required this.buyerId,
     required this.exchangable,
@@ -43,6 +43,7 @@ class ExchangingOrder {
     required this.profit,
     required this.sellerId,
     required this.shipping,
+    required this.paymentmethod
   });
 }
 

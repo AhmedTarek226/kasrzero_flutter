@@ -3,17 +3,19 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:kasrzero_flutter/constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kasrzero_flutter/models/product.dart';
 
 import '../../functions.dart';
 
 class MyProductWidget extends StatelessWidget {
-  MyProductWidget({super.key});
+  MyProductWidget({required this.myProduct, super.key});
+  final Product myProduct;
 
-  final List products = [];
-  List imgs = [
-    "public\\img\\img-1667402141004lap1.png",
-    "public\\img\\img-1667402141009Lark20211104-143537.jpg"
-  ];
+  // final List products = [];
+  // List imgs = [
+  //   "public\\img\\img-1667402141004lap1.png",
+  //   "public\\img\\img-1667402141009Lark20211104-143537.jpg"
+  // ];
 
   // final cc = {
   //   "first": {"title": "", "options": []}
@@ -28,6 +30,9 @@ class MyProductWidget extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(
             height: 195.h,
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 10.h),
+            color: Colors.grey[200],
             child: CarouselSlider.builder(
               options: CarouselOptions(
                 autoPlay: false,
@@ -36,19 +41,19 @@ class MyProductWidget extends StatelessWidget {
                 aspectRatio: 2.0,
                 initialPage: 0,
               ),
-              itemCount: imgs.length,
+              itemCount: myProduct.img.length,
               itemBuilder:
                   (BuildContext context, int itemIndex, int pageViewIndex) =>
                       Container(
                 child: Image.network(
                     fit: BoxFit.contain,
-                    "http://$KLocalhost/${imageFormat(imgs[itemIndex])}"),
+                    "http://$KLocalhost/${oneImageFormat(myProduct.img[itemIndex])}"),
               ),
             )),
         Padding(
           padding: EdgeInsets.only(top: 10.h, left: 4.w, right: 4.w),
           child: Text(
-            "Iphone 13 pro max 256 GBasdas dfeasfasa sdsdfefef efw fwe",
+            myProduct.title,
             style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
@@ -57,7 +62,7 @@ class MyProductWidget extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(top: 5.h, left: 4.w, right: 4.w),
           child: Text(
-            "19500 EGP",
+            "${myProduct.price} EGP",
             style: TextStyle(
                 fontSize: 15.sp,
                 fontWeight: FontWeight.w500,

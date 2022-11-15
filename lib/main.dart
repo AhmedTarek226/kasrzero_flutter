@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
                   "/": (context) => const MainScreen(),
                   "/main": (context) => const MainScreen(),
                   "/home": (context) => HomeScreen(),
-                  "/exchange_products": (context) => ExchangeProductsScreen(),
+                  "/exchange_products": (context) => const ExchangeProductsScreen(),
                   "/my_ads": (context) => const MyAdsScreen(),
                   "/my_info": (context) => const MyInfoScreen(),
                   "/my_account": (context) => const MyAccountScreen(),
