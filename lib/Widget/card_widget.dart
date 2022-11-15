@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kasrzero_flutter/constants.dart';
 import 'package:kasrzero_flutter/models/product.dart';
 
@@ -62,7 +63,7 @@ class FurnitureListView extends StatelessWidget {
     );
   }
 
-  Widget _listViewItem(Product product, int index , String idpro) {
+  Widget _listViewItem(Product product, int index, String idpro) {
     Widget widget;
     widget = isHorizontal == true
         ? Column(
@@ -77,8 +78,12 @@ class FurnitureListView extends StatelessWidget {
             child: Card(
               color: Colors.white,
               child: Container(
-                decoration: BoxDecoration(border: Border.all(color: (isslected==idpro?Colors.orangeAccent:Colors.transparent)),
-                borderRadius: BorderRadius.circular(5)),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: (isslected == idpro
+                            ? Colors.orangeAccent
+                            : Colors.transparent)),
+                    borderRadius: BorderRadius.circular(5)),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -90,14 +95,14 @@ class FurnitureListView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(product.title, style: h4Style),
-                            const SizedBox(height: 5),
+                            SizedBox(height: 5.h),
                             Text(
-                              product.description,
-                              style: h5Style.copyWith(fontSize: 12),
+                              "Used: ${product.durationOfUse}",
+                              style: h5Style.copyWith(fontSize: 12.sp),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 5),
+                            SizedBox(height: 5.h),
                             Text(
                               '${product.price} EGP',
                               style: h4Styleo,
@@ -128,7 +133,7 @@ class FurnitureListView extends StatelessWidget {
               itemCount: ProductList.length,
               itemBuilder: (_, index) {
                 Product furniture = ProductList[index];
-                return _listViewItem(furniture, index,furniture.id);
+                return _listViewItem(furniture, index, furniture.id);
               },
               separatorBuilder: (BuildContext context, int index) {
                 return const Padding(
@@ -146,7 +151,7 @@ class FurnitureListView extends StatelessWidget {
               Product product = ProductList[index];
               return Padding(
                 padding: const EdgeInsets.only(bottom: 0),
-                child:  _listViewItem(product, index,product.id),
+                child: _listViewItem(product, index, product.id),
               );
             },
           );

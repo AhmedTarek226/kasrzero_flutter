@@ -33,9 +33,6 @@ class _SignInScreenState extends State<SignInScreen> {
       _formKey.currentState?.save();
       // print("in login form func");
       userAuth.Login(user).then((value) async {
-        setState(() {
-          isLoading = false;
-        });
         // print(value.body);
         if (value.body == "failed") {
           ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(
@@ -47,6 +44,9 @@ class _SignInScreenState extends State<SignInScreen> {
           Provider.of<UserProvider>(ctx, listen: false).setUser(currentUser);
           Navigator.pop(ctx);
         }
+        setState(() {
+          isLoading = false;
+        });
 
         // print(value.body);
         // Navigator.pushReplacementNamed(context, "/home");

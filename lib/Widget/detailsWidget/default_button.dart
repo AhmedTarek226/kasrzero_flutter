@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kasrzero_flutter/constants.dart';
 
-
-
 class DefaultButton extends StatelessWidget {
   const DefaultButton({
     Key? key,
@@ -17,12 +15,14 @@ class DefaultButton extends StatelessWidget {
     return SizedBox(
       width: getProportionateScreenWidth(150),
       height: getProportionateScreenHeight(46),
-      child: TextButton(
-        style: TextButton.styleFrom(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          primary: Colors.white,
-          backgroundColor: KPrimaryColor,
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(KPrimaryColor),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+          ),
         ),
         onPressed: press as void Function()?,
         child: Text(

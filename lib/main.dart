@@ -6,6 +6,9 @@ import 'package:kasrzero_flutter/providers/categories_provider.dart';
 import 'package:kasrzero_flutter/providers/user_provider.dart';
 import 'package:kasrzero_flutter/screens/add_credit_screen.dart';
 import 'package:kasrzero_flutter/screens/confirm_order.dart';
+import 'package:kasrzero_flutter/screens/finish_offer.dart';
+import 'package:kasrzero_flutter/screens/finish_order.dart';
+import 'package:kasrzero_flutter/screens/finish_postAd_screen.dart';
 import 'package:kasrzero_flutter/screens/product_details_screen.dart';
 import 'package:kasrzero_flutter/screens/exchange_products_screen.dart';
 import 'package:kasrzero_flutter/screens/home_screen.dart';
@@ -73,6 +76,9 @@ class MyApp extends StatelessWidget {
                   "/add_credit_card": (context) => AddCreditScreen(),
                    "/Filtre": (context) =>  Filtre(),
                   "/my_cart":(context) => const MyCartScreen(),
+                  '/finish_post_ad':(context) => const FinishPostAd(),
+                  '/finish_order':(context) => const FinishOrder(),
+                  '/finish_offer':(context) => const FinishOffer(),
                 })),
       ),
     );

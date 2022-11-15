@@ -5,12 +5,14 @@ import 'package:kasrzero_flutter/constants.dart';
 import 'package:kasrzero_flutter/functions.dart';
 import 'package:kasrzero_flutter/models/ad.dart';
 import 'package:kasrzero_flutter/models/category.dart';
+import 'package:kasrzero_flutter/models/order.dart';
 import 'package:kasrzero_flutter/models/product.dart';
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:async';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
+import 'package:kasrzero_flutter/models/user_data.dart';
 import 'package:path/path.dart';
 
 class CategoryApi {
@@ -35,7 +37,7 @@ class CategoryApi {
         .toList();
   }
 
-   getcatbyid(String id) async {
+  getcatbyid(String id) async {
     Uri url = Uri.http(KLocalhost, "/product/categories/$id");
     var resp = await http.get(url);
     var data = jsonDecode(resp.body);
@@ -50,7 +52,7 @@ class CategoryApi {
       optionssecondFilter: data["secondFilter"]["options"],
       optionsthirdFilter: data["thirdFilter"]["options"],
     );
-    
+
     return cat;
   }
 }
@@ -58,10 +60,10 @@ class CategoryApi {
 class ProductApi {
   // Future<http.Response>
 
-  PostNewAd(Ad ad, String userId) async {
+  Future<http.StreamedResponse> PostNewAd(Ad ad, String userId) async {
     Map<String, String> body = {
       'title': ad.title,
-      'price': "700",
+      'price': ad.price.toString(),
       'description': ad.description,
       'ableToExchange': ad.ableToExchange,
       'brand': ad.brand,
@@ -72,7 +74,7 @@ class ProductApi {
       'thirdFilter': ad.thirdFilter,
       'categoryId': ad.categoryId
     };
-    var uri = Uri.parse("http://$KLocalhost/product/addFromMob/$userId");
+    var uri = Uri.parse("http://$KLocalhost/product/add/$userId");
     var request = http.MultipartRequest("POST", uri);
     for (int i = 0; i < ad.img.length; i++) {
       var stream =
@@ -86,9 +88,7 @@ class ProductApi {
     request.fields.addAll(body);
     var response = await request.send();
     print(response.statusCode);
-    response.stream.transform(utf8.decoder).listen((value) {
-      print(value);
-    });
+    return response;
   }
 
   Future<List<Product>> getpro() async {
@@ -149,5 +149,44 @@ class ProductApi {
     }
     return products;
     // print(p);
+  }
+
+  Future<http.Response> sendOffer(String wanted,String offered)async{
+    var url = Uri.parse("http://$KLocalhost/product/sendoffer/$wanted/$offered");
+
+    return await http.post(url,
+        body: "",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        encoding: Encoding.getByName("utf-8"));
+  }
+}
+
+class OrderApi {
+  Future<http.Response> createBuyingOrder(BuyingOrder order) async {
+    Map<String, String> body = {
+      "buyerId": order.buyerId,
+      "sellerId": order.sellerId,
+      "productId": order.productId,
+      "productPrice": order.productPrice.toString(),
+      "profit": order.profit.toString(),
+      "shipping": order.shipping.toString(),
+      "addresstoBlockNumber": order.addressto.blockNumber.toString(),
+      "addresstoSt": order.addressto.st,
+      "addresstoArea": order.addressto.area,
+      "addresstoCity": order.addressto.city,
+      "paymentmethod": order.paymentmethod
+    };
+    var url = Uri.parse("http://$KLocalhost/order/createBuyingOrder");
+
+    return await http.post(url,
+        body: body,
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        encoding: Encoding.getByName("utf-8"));
   }
 }

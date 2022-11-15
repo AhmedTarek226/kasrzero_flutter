@@ -4,6 +4,7 @@ import 'package:kasrzero_flutter/Widget/detailsWidget/custom_app_bar.dart';
 import 'package:kasrzero_flutter/Widget/Filter_widget/filterItem.dart';
 import 'package:kasrzero_flutter/Widget/detailsWidget/default_button.dart';
 import 'package:kasrzero_flutter/Widget/detailsWidget/top_rounded_container.dart';
+import 'package:kasrzero_flutter/constants.dart';
 import 'package:kasrzero_flutter/models/category.dart';
 import 'package:kasrzero_flutter/providers/Filter_provider.dart';
 import 'package:provider/provider.dart';
@@ -64,6 +65,7 @@ class _FiltreState extends State<Filtre> {
       thirdfilterSelected = la;
     });
   }
+
   RangeValues currentRangeValues = const RangeValues(0, 50000);
 
   @override
@@ -74,7 +76,7 @@ class _FiltreState extends State<Filtre> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(AppBar().preferredSize.height),
-        child: CustomAppBar(Title: "Filtre"),
+        child: CustomAppBar(Title: "Filter"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -86,54 +88,20 @@ class _FiltreState extends State<Filtre> {
               child: Text("Duration Of Use"),
             ),
             Expanded(
-              flex: 1,
-              child: ListView(scrollDirection: Axis.horizontal, children: [
-                FilterItem(
-                  label: "Up to 6 months",
-                  color: Colors.white,
-                  textColor: Colors.grey,
-                  s: (durationOfUseSlected == "Up to 6 months") ? true : false,
-                  getlabal: isdurationOfUseSlected,
-                ),
-                FilterItem(
-                  label: "1 Year",
-                  color: Colors.white,
-                  textColor: Colors.grey,
-                  s: (durationOfUseSlected == "1 Year") ? true : false,
-                  getlabal: isdurationOfUseSlected,
-                ),
-                FilterItem(
-                  label: "2 Year",
-                  color: Colors.white,
-                  textColor: Colors.grey,
-                  s: (durationOfUseSlected == "2 Year") ? true : false,
-                  getlabal: isdurationOfUseSlected,
-                ),
-                FilterItem(
-                  label: "3 Year",
-                  color: Colors.white,
-                  textColor: Colors.grey,
-                  s: (durationOfUseSlected == "3 Year") ? true : false,
-                  getlabal: isdurationOfUseSlected,
-                ),
-                FilterItem(
-                  label: "4 Year",
-                  color: Colors.white,
-                  textColor: Colors.grey,
-                  s: (durationOfUseSlected == "4 Year") ? true : false,
-                  getlabal: isdurationOfUseSlected,
-                ),
-                FilterItem(
-                  label: "5 Years and more",
-                  color: Colors.white,
-                  textColor: Colors.grey,
-                  s: (durationOfUseSlected == "5 Years and more")
-                      ? true
-                      : false,
-                  getlabal: isdurationOfUseSlected,
-                ),
-              ]),
-            ),
+                flex: 1,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: KDurationsOfUse.length,
+                  itemBuilder: ((context, index) => FilterItem(
+                        label: KDurationsOfUse[index],
+                        color: Colors.white,
+                        textColor: Colors.grey,
+                        s: (durationOfUseSlected == KDurationsOfUse[index])
+                            ? true
+                            : false,
+                        getlabal: isdurationOfUseSlected,
+                      )),
+                )),
             Padding(
               padding: const EdgeInsets.all(4),
               child: Text("Colors"),
@@ -187,19 +155,19 @@ class _FiltreState extends State<Filtre> {
             Expanded(
                 flex: 1,
                 child: RangeSlider(
-      values: currentRangeValues,
-      max: 50000,
-      divisions: 1000,
-      labels: RangeLabels(
-        currentRangeValues.start.round().toString(),
-        currentRangeValues.end.round().toString(),
-      ),
-      onChanged: (RangeValues values) {
-        setState(() {
-          currentRangeValues = values;
-        });
-      },
-    )),
+                  values: currentRangeValues,
+                  max: 50000,
+                  divisions: 1000,
+                  labels: RangeLabels(
+                    currentRangeValues.start.round().toString(),
+                    currentRangeValues.end.round().toString(),
+                  ),
+                  onChanged: (RangeValues values) {
+                    setState(() {
+                      currentRangeValues = values;
+                    });
+                  },
+                )),
             (agrs.brands.length == 0
                 ? Container()
                 : Padding(
@@ -301,16 +269,16 @@ class _FiltreState extends State<Filtre> {
                             text: "filter",
                             press: () {
                               Filtermodel fil = Filtermodel(
-                                  state: true,
-                                  brand: brandesSelected,
-                                  color: "",
-                                  durationOfUse: durationOfUseSlected,
-                                  firstFilter: firstfilterSelected,
-                                  secondFilter: secondfilterSelected,
-                                  thirdFilter: thirdfilterSelected,
-                                  colorf: colorsSlected,
-                                  price: currentRangeValues,
-                                  );
+                                state: true,
+                                brand: brandesSelected,
+                                color: "",
+                                durationOfUse: durationOfUseSlected,
+                                firstFilter: firstfilterSelected,
+                                secondFilter: secondfilterSelected,
+                                thirdFilter: thirdfilterSelected,
+                                colorf: colorsSlected,
+                                price: currentRangeValues,
+                              );
                               filterprovider.setFilter(fil);
                               Navigator.of(context).pop();
                             },

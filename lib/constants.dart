@@ -2,15 +2,33 @@ import 'package:flutter/material.dart';
 
 const KLocalhost = "192.168.1.108:4000";
 const KPrimaryColor = Color.fromARGB(255, 251, 176, 59);
-const List<String> durationsOfUse = [
-    "Up to 3 months",
-    "3 to 6 months",
-    "1 year",
-    "2 years",
-    "3 years",
-    "4 years",
-    "5 years and more",
-  ];
+int shipping = 25;
+const List<String> KDurationsOfUse = [
+  "Up to 3 months",
+  "3 to 6 months",
+  "1 year",
+  "2 years",
+  "3 years",
+  "4 years",
+  "5 years and more",
+];
+
+const List<String> KProductColors = [
+  "red",
+  "pink",
+  "purple",
+  "blue",
+  "teal",
+  "green",
+  "lime",
+  "yellow",
+  "orange",
+  "brown",
+  "gray",
+  "black",
+  "white",
+  "indigo",
+];
 
 class Palette {
   static const MaterialColor kToDark = const MaterialColor(

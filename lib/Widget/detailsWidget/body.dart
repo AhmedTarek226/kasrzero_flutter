@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:kasrzero_flutter/Widget/confirm_exchange_order.dart/new_address_widget.dart';
 import 'package:kasrzero_flutter/Widget/confirm_exchange_order.dart/select_ads_to_exchange.dart';
@@ -95,7 +96,7 @@ class _BodyState extends State<Body> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: const Text(
-                      'You must be login to add in youer cart',
+                      'You must be login to add in your cart',
                       style: TextStyle(color: Colors.white),
                     ),
                     backgroundColor: Color.fromARGB(134, 255, 172, 64),
@@ -172,6 +173,14 @@ class _BodyState extends State<Body> {
               padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               child: Column(
                 children: [
+                  Text("${widget.product.price} EGP",
+                      style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600)),
+                  SizedBox(
+                    height: 20.h,
+                  ),
                   (widget.product.ableToExchange == "true"
                       ? Container(
                           width: 0,
@@ -236,7 +245,7 @@ class _BodyState extends State<Body> {
                               } else {
                                 Navigator.of(context).pushNamed(
                                     "/confirm_order",
-                                    arguments: widget.product);
+                                    arguments: [widget.product]);
                               }
                             }
                           },
@@ -306,7 +315,7 @@ class _BodyState extends State<Body> {
                                   } else {
                                     Navigator.of(context).pushNamed(
                                         "/confirm_order",
-                                        arguments: widget.product);
+                                        arguments: [widget.product]);
                                   }
                                 }
                               },
@@ -428,6 +437,7 @@ class _BodyState extends State<Body> {
                                             return TopRoundedContainer(
                                                 color: Colors.white,
                                                 child: listofads(
+                                                  sellerProduct: widget.product,
                                                   id: currentUser.id,
                                                 ));
                                           });

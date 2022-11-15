@@ -5,6 +5,10 @@ class MyCartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: Center(child: Text('My_cart_screen'),),);
+    return Container(
+      child: Center(
+        child: Text('My_cart_screen'),
+      ),
+    );
   }
 }

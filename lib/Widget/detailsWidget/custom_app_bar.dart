@@ -11,7 +11,8 @@ const h4Styleo = TextStyle(
 
 class CustomAppBar extends StatelessWidget {
   final String Title;
-  CustomAppBar({required this.Title});
+  bool lead;
+  CustomAppBar({required this.Title, this.lead = true});
   @override
   // AppBar().preferredSize.height provide us the height that appy on our app bar
   Size get preferredSize => Size.fromHeight(AppBar().preferredSize.height);
@@ -25,27 +26,28 @@ class CustomAppBar extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              height: getProportionateScreenWidth(40),
-              width: getProportionateScreenWidth(40),
-              child: TextButton(
-                  style: TextButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(60),
-                    ),
-                    primary: KPrimaryColor,
-                    backgroundColor: Colors.white,
-                    padding: EdgeInsets.zero,
-                  ),
-                  // Navigator.pop(context)
-                  onPressed: () => {Navigator.pop(context)},
-                  child: Icon(Icons.arrow_back)),
-            ),
-            // Spacer(),
+            lead
+                ? SizedBox(
+                    height: getProportionateScreenWidth(40),
+                    width: getProportionateScreenWidth(40),
+                    child: TextButton(
+                        style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(60),
+                          ),
+                          primary: KPrimaryColor,
+                          backgroundColor: Colors.white,
+                          padding: EdgeInsets.zero,
+                        ),
+                        // Navigator.pop(context)
+                        onPressed: () => {Navigator.pop(context)},
+                        child: Icon(Icons.arrow_back)),
+                  )
+                : Container(),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: 10.w,
+                  horizontal: lead ? 10.w : 0,
                 ),
                 child: Text(
                   Title,

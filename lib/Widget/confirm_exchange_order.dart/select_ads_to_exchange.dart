@@ -10,7 +10,9 @@ import 'package:kasrzero_flutter/services/user_service.dart';
 class listofads extends StatefulWidget {
   String id;
   List<Product> ads = [];
+  Product sellerProduct;
   listofads({
+    required this.sellerProduct,
     required this.id,
   });
   @override
@@ -66,15 +68,18 @@ class _listofadsState extends State<listofads> {
                 });
               },
             )),
-        Padding(
-          padding: EdgeInsets.all(10),
-          child: DefaultButton(
-            text: "confirm",
-            press: () {
-              Navigator.of(context).pushNamed("/confirm_order", arguments: pro);
-            },
-          ),
-        )
+        isslect != ""
+            ? Padding(
+                padding: EdgeInsets.all(10),
+                child: DefaultButton(
+                  text: "Confirm offer",
+                  press: () {
+                    Navigator.of(context).pushNamed("/confirm_order",
+                        arguments: [widget.sellerProduct, pro]);
+                  },
+                ),
+              )
+            : Container()
       ],
     );
   }

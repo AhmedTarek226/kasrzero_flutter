@@ -2,13 +2,13 @@ import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:kasrzero_flutter/Widget/Category_tap.widget.dart';
 import 'package:kasrzero_flutter/Widget/card_widget.dart';
+
 import 'package:kasrzero_flutter/constants.dart';
 import 'package:kasrzero_flutter/models/category.dart';
 import 'package:kasrzero_flutter/models/product.dart';
 import 'package:kasrzero_flutter/providers/Filter_provider.dart';
 import 'package:kasrzero_flutter/providers/user_provider.dart';
 import 'package:kasrzero_flutter/services/store.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:searchbar_animation/searchbar_animation.dart';
 import 'package:textfield_search/textfield_search.dart';
@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Product> catpro = [];
   List<Product> pro1 = [];
   List<String> search = [];
-  Category fcat = Category(
+  Category fcat = new Category(
     id: "",
     title: "",
     brands: [],
@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
     optionssecondFilter: [],
     optionsthirdFilter: [],
   );
-  Category catAll = Category(
+  Category catAll = new Category(
     id: "",
     title: "",
     brands: [],
@@ -54,9 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
   bool cats = false;
   @override
   void initState() {
-    setState(() {
-      isLoading = true;
-    });
     ApiCategory.getcat().then((value) {
       setState(() {
         cat = value;
@@ -70,10 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
           pro = pro1,
           // print(value[0].id)
         });
-    setState(() {
-      isLoading = false;
-    });
-    super.initState();
   }
 
   void Allcat(String id) {
@@ -95,7 +88,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   TextEditingController textControllers = TextEditingController();
-  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -155,12 +147,9 @@ class _HomeScreenState extends State<HomeScreen> {
         });
         filterprovider.setfilterno();
       }
-    } else {}
-    // setState(() {
-    //   for (var i = 0; i < pro1.length; i++) {
-    //     search.insert(i, pro1[i].title.toLowerCase());
-    //   }
-    // });
+    } else {
+      
+    }
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -179,25 +168,25 @@ class _HomeScreenState extends State<HomeScreen> {
                       secondaryButtonWidget: Icon(Icons.arrow_back),
                       trailingWidget: Icon(Icons.close),
                       onChanged: (String value) {
-                        if (SelectedCategory == "") {
+                      if(SelectedCategory==""){
                           List<Product> sear = pro1.where((element) {
-                            final tital = element.title.toLowerCase();
-                            final inpout = value.toLowerCase();
-                            return tital.contains(inpout);
-                          }).toList();
-                          setState(() {
-                            pro = sear;
-                          });
-                        } else {
-                          List<Product> sear = catpro.where((element) {
-                            final tital = element.title.toLowerCase();
-                            final inpout = value.toLowerCase();
-                            return tital.contains(inpout);
-                          }).toList();
-                          setState(() {
-                            pro = sear;
-                          });
-                        }
+                          final tital = element.title.toLowerCase();
+                          final inpout = value.toLowerCase();
+                          return tital.contains(inpout);
+                        }).toList();
+                        setState(() {
+                          pro = sear;
+                        });
+                      }else{
+                        List<Product> sear = catpro.where((element) {
+                          final tital = element.title.toLowerCase();
+                          final inpout = value.toLowerCase();
+                          return tital.contains(inpout);
+                        }).toList();
+                        setState(() {
+                          pro = sear;
+                        });
+                      }
                       },
                       onFieldSubmitted: (String value) {
                         List<Product> sear = pro1
@@ -215,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 46,
                         width: 46,
                         decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 251, 176, 59),
+                          color: KPrimaryColor,
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -258,27 +247,28 @@ class _HomeScreenState extends State<HomeScreen> {
                       ))
                   .toList()
             ])),
-            isLoading == true
-                ? Center(
-                    child: LoadingAnimationWidget.staggeredDotsWave(
-                      color: KPrimaryColor,
-                      size: 30,
-                    ),
-                  )
-                : pro.isEmpty
-                    ? const Expanded(
-                        flex: 7, child: Center(child: Text("No Results !")))
-                    : Expanded(
-                        flex: 7,
-                        child: FurnitureListView(
-                          ProductList: pro,
-                          isHorizontal: false,
-                          onTap: (Product) {
-                            print(Product.title);
-                            Navigator.of(context)
-                                .pushNamed("/product", arguments: Product);
-                          },
-                        ))
+            // InkWell(
+            //     onTap: () => {getcatpro(e.id)},
+            //     child: Padding(
+            //       padding:
+            //           const EdgeInsets.symmetric(horizontal: 8),
+            //       child: Chip(
+            //         label: Text(e.title),
+            //         backgroundColor: Colors.white,
+            //         labelStyle: TextStyle(color: Colors.grey),
+            //       ),
+            //     ))
+            Expanded(
+                flex: 7,
+                child: FurnitureListView(
+                  ProductList: pro,
+                  isHorizontal: false,
+                  onTap: (Product) {
+                    print(Product.title);
+                    Navigator.of(context)
+                        .pushNamed("/product", arguments: Product);
+                  },
+                ))
           ],
         ),
       ),

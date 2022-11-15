@@ -18,6 +18,9 @@ import 'package:kasrzero_flutter/services/store.dart';
 import 'package:provider/provider.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import '../Widget/confirm_exchange_order.dart/new_address_widget.dart';
+import '../Widget/detailsWidget/top_rounded_container.dart';
+
 class PostAdScreen extends StatefulWidget {
   const PostAdScreen({super.key});
 
@@ -39,33 +42,11 @@ class _PostAdScreenState extends State<PostAdScreen> {
 
   bool _switchValue = false;
   final _formKey = GlobalKey<FormState>();
-  static List<String> durationsOfUse = [
-    "Up to 3 months",
-    "3 to 6 months",
-    "1 year",
-    "2 years",
-    "3 years",
-    "4 years",
-    "5 years and more",
-  ];
-  static List<String> colors = [
-    "red",
-    "pink",
-    "purple",
-    "blue",
-    "teal",
-    "green",
-    "lime",
-    "yellow",
-    "orange",
-    "brown",
-    "gray",
-    "black",
-    "white",
-    "indigo",
-  ];
+  static List<String> durationsOfUse = KDurationsOfUse;
+  List<String> colors = KProductColors;
 
   bool isLoading = false;
+  // ignore: prefer_final_fields
   var _newAd = Ad(
       userId: "",
       categoryId: "",
@@ -81,61 +62,66 @@ class _PostAdScreenState extends State<PostAdScreen> {
       secondFilter: "",
       thirdFilter: "");
 
-  final list = List.generate((40), (val) => "val $val");
-  final ScrollController _controller = new ScrollController();
-  var reachEnd = false;
-
-  _listener() {
-    final maxScroll = _controller.position.maxScrollExtent;
-    final minScroll = _controller.position.minScrollExtent;
-    if (_controller.offset >= maxScroll) {
-      setState(() {
-        reachEnd = true;
-      });
-    }
-
-    if (_controller.offset <= minScroll) {
-      setState(() {
-        reachEnd = false;
-      });
-    }
-  }
-
   @override
   void initState() {
-    _controller.addListener(_listener);
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.removeListener(_listener);
-    _controller.dispose();
     super.dispose();
   }
 
   final _productApi = ProductApi();
-  void _saveForm(ctx) async {
+  void _saveForm(ctx, userId) async {
+    final currentUser = Provider.of<UserProvider>(ctx, listen: false).getUser();
     if (_formKey.currentState!.validate()) {
       if (imageFileList!.isEmpty) {
         ScaffoldMessenger.of(ctx).showSnackBar(
             const SnackBar(content: Text("Please pick some images.")));
         return;
       }
+      if (currentUser.address.area == "" ||
+          currentUser.address.city == "" ||
+          currentUser.address.st == "") {
+        showModalBottomSheet(
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            context: context,
+            builder: (BuildContext context) {
+              return TopRoundedContainer(
+                  color: Colors.white, child: NewAddressModal());
+            });
+        if (currentUser.address.area == "" ||
+            currentUser.address.city == "" ||
+            currentUser.address.st == "") {
+          return;
+        }
+        _saveForm(ctx, currentUser.id);
+      } else {
+        setState(() {
+          isLoading = true;
+        });
+        _formKey.currentState!.save();
 
-      _formKey.currentState!.save();
-      final currentUser =
-          Provider.of<UserProvider>(ctx, listen: false).getUser();
+        setState(() {
+          _newAd.img = imageFileList!;
+        });
 
-      setState(() {
-        // isLoading = true;
-        _newAd.img = imageFileList!;
-      });
-
-      var res = await _productApi.PostNewAd(_newAd, "6362890cf85d9a3d675e7927");
-      setState(() {
-        isLoading = false;
-      });
+        var res = await _productApi.PostNewAd(_newAd, userId);
+        if (res.statusCode == 200) {
+          Navigator.pushReplacementNamed(ctx, '/finish_post_ad');
+        } else {
+          ScaffoldMessenger.of(ctx).showSnackBar(
+            SnackBar(
+              content: Text("Failed to post ad, try again later!!"),
+            ),
+          );
+        }
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -169,11 +155,23 @@ class _PostAdScreenState extends State<PostAdScreen> {
       backgroundColor: Colors.grey[100],
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(AppBar().preferredSize.height),
-        child: CustomAppBar(Title: "Post Ad"),
+        child: CustomAppBar(Title: "Post Ad", lead: false),
       ),
       body: currentUser.id == "id"
           ? Center(
-              child: Text("login"),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("You should login to show this page !"),
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  DefaultButton(
+                    press: () => Navigator.pushNamed(context, "/signin"),
+                    text: "Login !",
+                  )
+                ],
+              ),
             )
           : isLoading
               ? Center(
@@ -645,8 +643,8 @@ class _PostAdScreenState extends State<PostAdScreen> {
                                               ),
                                               DefaultButton(
                                                   text: "Finish Ad",
-                                                  press: () =>
-                                                      _saveForm(context)),
+                                                  press: () => _saveForm(
+                                                      context, currentUser.id)),
                                             ],
                                           ),
                                         ),
