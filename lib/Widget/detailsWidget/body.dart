@@ -182,76 +182,8 @@ class _BodyState extends State<Body> {
                     height: 20.h,
                   ),
                   (widget.product.ableToExchange == "true"
-                      ? Container(
-                          width: 0,
-                        )
-                      : DefaultButton(
-                          text: "Buy",
-                          press: () {
-                            if (currentUser.id == "id") {
-                              showDialog<void>(
-                                context: context,
-                                barrierDismissible:
-                                    false, // user must tap button!
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text(
-                                      'You must be login to add in your cart',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    backgroundColor:
-                                        Color.fromARGB(134, 255, 172, 64),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: const Text(
-                                          'Cancel',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      SizedBox(
-                                        width: 100,
-                                      ),
-                                      TextButton(
-                                        child: const Text(
-                                          'Sign in',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          Navigator.of(context)
-                                              .pushNamed("/signin");
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            } else {
-                              if (currentUser.address.area == "" ||
-                                  currentUser.address.city == "" ||
-                                  currentUser.address.st == "") {
-                                showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    backgroundColor: Colors.transparent,
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return TopRoundedContainer(
-                                          color: Colors.white,
-                                          child: NewAddressModal());
-                                    });
-                              } else {
-                                Navigator.of(context).pushNamed(
-                                    "/confirm_order",
-                                    arguments: [widget.product]);
-                              }
-                            }
-                          },
-                        )),
-                  (widget.product.ableToExchange == "true"
                       ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             DefaultButton(
                               text: "Buy",
@@ -448,7 +380,78 @@ class _BodyState extends State<Body> {
                             ),
                           ],
                         )
-                      : Container()),
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            DefaultButton(
+                              text: "Buy",
+                              press: () {
+                                if (currentUser.id == "id") {
+                                  showDialog<void>(
+                                    context: context,
+                                    barrierDismissible:
+                                        false, // user must tap button!
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text(
+                                          'You must be login to buy',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        backgroundColor:
+                                            Color.fromARGB(134, 255, 172, 64),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: const Text(
+                                              'Cancel',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          SizedBox(
+                                            width: 100,
+                                          ),
+                                          TextButton(
+                                            child: const Text(
+                                              'Sign in',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context)
+                                                  .pushNamed("/signin");
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  if (currentUser.address.area == "" ||
+                                      currentUser.address.city == "" ||
+                                      currentUser.address.st == "") {
+                                    showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        backgroundColor: Colors.transparent,
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return TopRoundedContainer(
+                                              color: Colors.white,
+                                              child: NewAddressModal());
+                                        });
+                                  } else {
+                                    Navigator.of(context).pushNamed(
+                                        "/confirm_order",
+                                        arguments: [widget.product]);
+                                  }
+                                }
+                              },
+                            ),
+                          ],
+                        )),
                 ],
               )),
         ),

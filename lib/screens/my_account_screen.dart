@@ -18,6 +18,7 @@ class MyAccountScreen extends StatelessWidget {
                   child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    
                     Text("welcome ${currentUser.userName}"),
                     ElevatedButton(
                         onPressed: (() {

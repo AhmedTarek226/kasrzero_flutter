@@ -42,16 +42,18 @@ class _SignInScreenState extends State<SignInScreen> {
           UserData currentUser = await userService.getUser(user.email);
           print(currentUser.email);
           Provider.of<UserProvider>(ctx, listen: false).setUser(currentUser);
-          Navigator.pop(ctx);
+          Navigator.pushReplacementNamed(context, '/main');
         }
         setState(() {
           isLoading = false;
         });
-
-        // print(value.body);
-        // Navigator.pushReplacementNamed(context, "/home");
-        // print(value.headers);
-      }).catchError((err) => print("err"));
+      }).catchError(
+        (err) => ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text("Connection failed"),
+          ),
+        ),
+      );
     }
   }
 
@@ -59,10 +61,6 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppBar().preferredSize.height),
-            child: CustomAppBar(Title: "Login Form"),
-          ),
           body: isLoading
               ? Center(
                   child: LoadingAnimationWidget.staggeredDotsWave(
@@ -80,7 +78,13 @@ class _SignInScreenState extends State<SignInScreen> {
                         Container(
                             // height: 100,
                             width: double.infinity,
-                            child: Image.asset('images/signinn.png')),
+                            child: Image.asset(
+                              'images/signinn.png',
+                              fit: BoxFit.contain,
+                            )),
+                        SizedBox(
+                          height: 20.h,
+                        ),
                         FormFieldLogin(
                           label: "Email",
                           icon: Icons.email,
@@ -123,7 +127,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             Text(
                               'Don\'t have an account? ',
                               style: TextStyle(
-                                  color: Colors.grey[700],
+                                  color: Colors.black87,
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w600),
                             ),

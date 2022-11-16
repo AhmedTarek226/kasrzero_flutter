@@ -40,29 +40,24 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
   bool isLoading = false;
   final _orderApi = OrderApi();
   _createBuyingOrder(BuyingOrder order) async {
-    // setState(() {
-    //   isLoading = true;
-    // });
     var res = await _orderApi.createBuyingOrder(order);
-    print(res.body);
-    // Navigator.pushReplacementNamed(context, '/finish_order');
-
-    // setState(() {
-    //   isLoading = false;
-    // });
+    if (res.body == "success") {
+      Navigator.pushReplacementNamed(context, '/finish_order');
+    }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   _createExchangingOrder(ExchangingOrder order) async {
-    // setState(() {
-    //   isLoading = true;
-    // });
     var res = await _orderApi.createExchangingOrder(order);
     print(res.body);
-    // Navigator.pushReplacementNamed(context, '/finish_order');
-
-    // setState(() {
-    //   isLoading = false;
-    // });
+    if (res.body == "success") {
+      Navigator.pushReplacementNamed(context, '/finish_order');
+    }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -72,319 +67,270 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
         ? [args[0] as Product, args[1] as Product]
         : [args[0] as Product];
     final currentUser = Provider.of<UserProvider>(context).getUser();
-    return SafeArea(
-      child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(AppBar().preferredSize.height),
-          child: CustomAppBar(
-              Title: _products.length > 1 ? "Confirm Offer" : "Confirm Order"),
-        ),
-        body: isLoading
-            ? Center(
-                child: LoadingAnimationWidget.staggeredDotsWave(
-                  color: KPrimaryColor,
-                  size: 30,
-                ),
-              )
-            : Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        _products[0].title,
-                        style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 19.sp,
-                            overflow: TextOverflow.ellipsis,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 5,
-                      child: Container(
-                        decoration: BoxDecoration(
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(AppBar().preferredSize.height),
+        child: CustomAppBar(
+            Title: _products.length > 1 ? "Confirm Offer" : "Confirm Order"),
+      ),
+      body: isLoading
+          ? Center(
+              child: LoadingAnimationWidget.staggeredDotsWave(
+                color: KPrimaryColor,
+                size: 30,
+              ),
+            )
+          : Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      _products[0].title,
+                      style: TextStyle(
                           color: Colors.black87,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.h, horizontal: 10.w),
-                          child: _products.length > 1
-                              ? Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text('Product price: ',
-                                            style: titlesStyle),
-                                        Text('Your product price: ',
-                                            style: titlesStyle),
-                                        Text(
-                                          'Difference: ',
-                                          style: titlesStyle,
+                          fontSize: 19.sp,
+                          overflow: TextOverflow.ellipsis,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black87,
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 10.h, horizontal: 10.w),
+                        child: _products.length > 1
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Product price: ',
+                                          style: titlesStyle),
+                                      Text('Your product price: ',
+                                          style: titlesStyle),
+                                      Text(
+                                        'Difference: ',
+                                        style: titlesStyle,
+                                      ),
+                                      Text(
+                                        'Shipping: ',
+                                        style: titlesStyle,
+                                      ),
+                                      Text(
+                                        'Taxes: ',
+                                        style: titlesStyle,
+                                      ),
+                                      Text(
+                                        'TOTAL COST ',
+                                        style: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text("${_products[0].price} EGP",
+                                          style: priceStyle),
+                                      Text("${_products[1].price} EGP",
+                                          style: priceStyle),
+                                      Text(
+                                          "${_products[1].price - _products[0].price} EGP",
+                                          style: priceStyle),
+                                      Text("$shipping EGP", style: priceStyle),
+                                      Text(
+                                          "${getTaxes(_products[0].price)} EGP",
+                                          style: priceStyle),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 7.w, vertical: 7.h),
+                                        decoration: const BoxDecoration(
+                                          color: KPrimaryColor,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
                                         ),
-                                        Text(
-                                          'Shipping: ',
-                                          style: titlesStyle,
-                                        ),
-                                        Text(
-                                          'Taxes: ',
-                                          style: titlesStyle,
-                                        ),
-                                        Text(
-                                          'TOTAL COST ',
+                                        child: Text(
+                                          "${getTotalOfferCost(_products[0].price, _products[1].price)} EGP",
                                           style: TextStyle(
-                                              fontSize: 16.sp,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w600),
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 16.sp),
                                         ),
-                                      ],
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text("${_products[0].price} EGP",
-                                            style: priceStyle),
-                                        Text("${_products[1].price} EGP",
-                                            style: priceStyle),
-                                        Text(
-                                            "${_products[1].price - _products[0].price} EGP",
-                                            style: priceStyle),
-                                        Text("$shipping EGP",
-                                            style: priceStyle),
-                                        Text(
-                                            "${getTaxes(_products[0].price)} EGP",
-                                            style: priceStyle),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 7.w, vertical: 7.h),
-                                          decoration: const BoxDecoration(
-                                            color: KPrimaryColor,
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(15),
-                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                  // SizedBox(width: 10.w,),
+                                ],
+                              )
+                            : Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Product price: ',
+                                          style: titlesStyle),
+                                      Text(
+                                        'Shipping: ',
+                                        style: titlesStyle,
+                                      ),
+                                      Text(
+                                        'Taxes: ',
+                                        style: titlesStyle,
+                                      ),
+                                      Text(
+                                        'TOTAL COST ',
+                                        style: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text("${_products[0].price} EGP",
+                                          style: priceStyle),
+                                      Text("$shipping EGP", style: priceStyle),
+                                      Text(
+                                          "${getTaxes(_products[0].price)} EGP",
+                                          style: priceStyle),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 7.w, vertical: 7.h),
+                                        decoration: const BoxDecoration(
+                                          color: KPrimaryColor,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
                                           ),
-                                          child: Text(
-                                            "${getTotalOfferCost(_products[0].price, _products[1].price)} EGP",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w800,
-                                                fontSize: 16.sp),
-                                          ),
                                         ),
-                                      ],
-                                    ),
-                                    // SizedBox(width: 10.w,),
-                                  ],
-                                )
-                              : Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text('Product price: ',
-                                            style: titlesStyle),
-                                        Text(
-                                          'Shipping: ',
-                                          style: titlesStyle,
-                                        ),
-                                        Text(
-                                          'Taxes: ',
-                                          style: titlesStyle,
-                                        ),
-                                        Text(
-                                          'TOTAL COST ',
+                                        child: Text(
+                                          "${getTotal(_products[0].price)} EGP",
                                           style: TextStyle(
-                                              fontSize: 16.sp,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w600),
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 16.sp),
                                         ),
-                                      ],
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text("${_products[0].price} EGP",
-                                            style: priceStyle),
-                                        Text("$shipping EGP",
-                                            style: priceStyle),
-                                        Text(
-                                            "${getTaxes(_products[0].price)} EGP",
-                                            style: priceStyle),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 7.w, vertical: 7.h),
-                                          decoration: const BoxDecoration(
-                                            color: KPrimaryColor,
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(15),
-                                            ),
-                                          ),
-                                          child: Text(
-                                            "${getTotal(_products[0].price)} EGP",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w800,
-                                                fontSize: 16.sp),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    // SizedBox(width: 10.w,),
-                                  ],
-                                ),
-                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  // SizedBox(width: 10.w,),
+                                ],
+                              ),
                       ),
                     ),
-                    Expanded(
-                        flex: 2,
-                        child: Container(
-                          margin: EdgeInsets.symmetric(vertical: 20.h),
-                          padding: EdgeInsets.symmetric(horizontal: 10.w),
-                          decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          child: _products.length > 1
-                              ? Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    DefaultButton(
-                                      text: args[2] == true
-                                          ? "Send Offer"
-                                          : "Accept",
-                                      press: () async {
-                                        // if offer
-                                        // else if order
-                                        if (args[2] == true) {
-                                          // create offer
-                                          setState(() {
-                                            isLoading = true;
-                                          });
-                                          final _productsApi = ProductApi();
-                                          var res =
-                                              await _productsApi.sendOffer(
-                                                  _products[0].id,
-                                                  _products[1].id);
-                                          if (res.body != "failed") {
-                                            Navigator.pushReplacementNamed(
-                                                context, '/finish_offer');
-                                          } else {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(
-                                                        "The offer failed to send !")));
-                                          }
-                                          setState(() {
-                                            isLoading = false;
-                                          });
+                  ),
+                  Expanded(
+                      flex: 2,
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 20.h),
+                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: _products.length > 1
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  DefaultButton(
+                                    text: args[2] == true
+                                        ? "Send Offer"
+                                        : "Accept",
+                                    press: () async {
+                                      setState(() {
+                                        isLoading = true;
+                                      });
+                                      //if offer send it
+                                      if (args[2] == true) {
+                                        // create offer
+                                        final _productsApi = ProductApi();
+                                        var res = await _productsApi.sendOffer(
+                                            _products[0].id, _products[1].id);
+                                        if (res.body != "failed") {
+                                          Navigator.pushReplacementNamed(
+                                              context, '/finish_offer');
                                         } else {
-                                          // create exchange order
-                                          ExchangingOrder _newExchangingOrder =
-                                              ExchangingOrder(
-                                                  addressto:
-                                                      currentUser.address,
-                                                  buyerId: currentUser.id,
-                                                  productId: _products[0].id,
-                                                  productPrice:
-                                                      _products[0].price,
-                                                  profit: getTaxes(
-                                                      _products[0].price),
-                                                  sellerId: _products[1].userId,
-                                                  shipping: shipping,
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                      "The offer failed to send !")));
+                                          Navigator.pushReplacementNamed(
+                                              context, '/main');
+                                        }
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                      }
+                                      // if exchanging orderlast step
+                                      else {
+                                        // create exchange order
+                                        ExchangingOrder _newExchangingOrder =
+                                            ExchangingOrder(
+                                                addressto: currentUser.address,
+                                                buyerId: currentUser.id,
+                                                productId: _products[0].id,
+                                                productPrice:
+                                                    _products[0].price,
+                                                profit: getTaxes(
+                                                    _products[0].price),
+                                                sellerId: _products[1].userId,
+                                                shipping: shipping,
+                                                paymentmethod: "cod",
+                                                exchangable: true,
+                                                exchangeProperties:
+                                                    ExchangeProperties(
                                                   paymentmethod: "cod",
-                                                  exchangable: true,
-                                                  exchangeProperties:
-                                                      ExchangeProperties(
-                                                    paymentmethod: "cod",
-                                                    productId: _products[1].id,
-                                                    productPrice:
-                                                        _products[1].price,
-                                                    profit: getTaxes(
-                                                        _products[1].price),
-                                                    shipping: shipping,
-                                                  ));
-                                          _createExchangingOrder(
-                                              _newExchangingOrder);
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                )
-                              : Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    DefaultButton(
-                                        text: "Buy COD",
-                                        press: () async {
-                                          // if (_products.length > 1) {
-                                          //   // create offer
-                                          //   setState(() {
-                                          //     isLoading = true;
-                                          //   });
-                                          //   final _productsApi = ProductApi();
-                                          //   var res = await _productsApi.sendOffer(
-                                          //       _products[0].id, _products[1].id);
-                                          //   if (res.body != "failed") {
-                                          //     Navigator.pushReplacementNamed(
-                                          //         context, '/finish_offer');
-                                          //   } else {
-                                          //     ScaffoldMessenger.of(context)
-                                          //         .showSnackBar(SnackBar(
-                                          //             content: Text(
-                                          //                 "The offer failed to send !")));
-                                          //   }
-                                          //   setState(() {
-                                          //     isLoading = false;
-                                          //   });
-                                          // } else {
-                                          BuyingOrder _newBuyingOrder =
-                                              BuyingOrder(
-                                                  addressto:
-                                                      currentUser.address,
-                                                  buyerId: currentUser.id,
-                                                  productId: _products[0].id,
+                                                  productId: _products[1].id,
                                                   productPrice:
-                                                      _products[0].price,
+                                                      _products[1].price,
                                                   profit: getTaxes(
-                                                      _products[0].price),
-                                                  sellerId: _products[0].userId,
+                                                      _products[1].price),
                                                   shipping: shipping,
-                                                  paymentmethod: "cod");
-                                          _createBuyingOrder(_newBuyingOrder);
-                                        }
-                                        // },
-                                        ),
-                                    DefaultButton(
-                                      text: "Buy Credit",
-                                      press: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    paypalWIdget(
-                                                        totalprise: 100)));
-                                        // paymentmethod credit
-                                        // create order
+                                                ));
+                                        _createExchangingOrder(
+                                            _newExchangingOrder);
+                                      }
+                                    },
+                                  ),
+                                ],
+                              )
+                            : Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  DefaultButton(
+                                      text: "Cash",
+                                      press: () async {
+                                        setState(() {
+                                          isLoading = true;
+                                        });
                                         BuyingOrder _newBuyingOrder =
                                             BuyingOrder(
                                                 addressto: currentUser.address,
@@ -396,17 +342,42 @@ class _ConfirmOrderState extends State<ConfirmOrder> {
                                                     _products[0].price),
                                                 sellerId: _products[0].userId,
                                                 shipping: shipping,
-                                                paymentmethod: "credit");
+                                                paymentmethod: "cod");
                                         _createBuyingOrder(_newBuyingOrder);
-                                      },
-                                    ),
-                                  ],
-                                ),
-                        ))
-                  ],
-                ),
+                                      }
+                                      // },
+                                      ),
+                                  DefaultButton(
+                                    text: "Buy Credit",
+                                    press: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  paypalWIdget(
+                                                      totalprise: 100)));
+                                      // wait response then create order if buy
+                                      setState(() {
+                                        isLoading = true;
+                                      });
+                                      BuyingOrder _newBuyingOrder = BuyingOrder(
+                                          addressto: currentUser.address,
+                                          buyerId: currentUser.id,
+                                          productId: _products[0].id,
+                                          productPrice: _products[0].price,
+                                          profit: getTaxes(_products[0].price),
+                                          sellerId: _products[0].userId,
+                                          shipping: shipping,
+                                          paymentmethod: "credit");
+                                      _createBuyingOrder(_newBuyingOrder);
+                                    },
+                                  ),
+                                ],
+                              ),
+                      ))
+                ],
               ),
-      ),
+            ),
     );
   }
 }

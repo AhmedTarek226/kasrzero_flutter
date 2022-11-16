@@ -9,6 +9,7 @@ import 'package:kasrzero_flutter/screens/confirm_order.dart';
 import 'package:kasrzero_flutter/screens/finish_offer.dart';
 import 'package:kasrzero_flutter/screens/finish_order.dart';
 import 'package:kasrzero_flutter/screens/finish_postAd_screen.dart';
+import 'package:kasrzero_flutter/screens/my_orders_screen.dart';
 import 'package:kasrzero_flutter/screens/product_details_screen.dart';
 import 'package:kasrzero_flutter/screens/exchange_products_screen.dart';
 import 'package:kasrzero_flutter/screens/home_screen.dart';
@@ -59,10 +60,11 @@ class MyApp extends StatelessWidget {
                 initialRoute: "/",
                 routes: {
                   // "/": (context) => OnBoardingScreen(),
-                  "/": (context) => const MainScreen(),
+                  "/": (context) => const SignInScreen(),
                   "/main": (context) => const MainScreen(),
-                  "/home": (context) => HomeScreen(),
-                  "/exchange_products": (context) => const ExchangeProductsScreen(),
+                  // "/home": (context) => HomeScreen(),
+                  "/exchange_products": (context) =>
+                      const ExchangeProductsScreen(),
                   "/my_ads": (context) => const MyAdsScreen(),
                   "/my_info": (context) => const MyInfoScreen(),
                   "/my_account": (context) => const MyAccountScreen(),
@@ -74,11 +76,12 @@ class MyApp extends StatelessWidget {
                   "/signup": (context) => const SignUpScreen(),
                   "/confirm_order": (context) => const ConfirmOrder(),
                   "/add_credit_card": (context) => AddCreditScreen(),
-                   "/Filtre": (context) =>  Filtre(),
-                  "/my_cart":(context) => const MyCartScreen(),
-                  '/finish_post_ad':(context) => const FinishPostAd(),
-                  '/finish_order':(context) => const FinishOrder(),
-                  '/finish_offer':(context) => const FinishOffer(),
+                  "/Filtre": (context) => Filtre(),
+                  "/my_cart": (context) => const MyCartScreen(),
+                  '/finish_post_ad': (context) => const FinishPostAd(),
+                  '/finish_order': (context) => const FinishOrder(),
+                  '/finish_offer': (context) => const FinishOffer(),
+                  '/my_orders': (context) => const MyOrdersScreen(),
                 })),
       ),
     );

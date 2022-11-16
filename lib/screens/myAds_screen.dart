@@ -210,7 +210,10 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                                                   ],
                                                 ),
                                               ),
-                                              (item.ableToExchange == "true")
+                                              (item.ableToExchange == "true" &&
+                                                      item.status !=
+                                                          "ordered" &&
+                                                      item.status != "sold")
                                                   ? item.offers.isEmpty
                                                       ? Flexible(
                                                           child: Container(

@@ -12,14 +12,25 @@ class profileBody extends StatelessWidget {
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserProvider>(context);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        //   Padding(padding: EdgeInsets.symmetric(horizontal: 10,vertical: 40)),
-        // SizedBox(
-        //   height: 100,
-        //   width: 120,
-        //   child: Text("Welcome again"),
-        // ),
-        SizedBox(height: 50),
+        SizedBox(height: 70.h),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10.w),
+          child: Text(
+            "Welcome ${userProvider.user.userName} ,",
+            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700),
+          ),
+        ),
+        SizedBox(height: 5.h),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 25.w),
+          child: Text(
+            "${userProvider.user.email}",
+            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
+          ),
+        ),
+        SizedBox(height: 25.h),
         ProfileMenu(
           press: () => {Navigator.of(context).pushNamed("/my_info")},
           text: "My Information",
@@ -31,9 +42,7 @@ class profileBody extends StatelessWidget {
           con: Icons.ad_units_outlined,
         ),
         ProfileMenu(
-          press: () => {
-            // Navigator.of(context).pushNamed("/my_cart")
-          },
+          press: () => {Navigator.of(context).pushNamed("/my_orders")},
           text: "My Orders",
           con: Icons.shopping_cart_outlined,
         ),

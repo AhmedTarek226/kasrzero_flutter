@@ -9,12 +9,17 @@ import 'package:kasrzero_flutter/models/product.dart';
 import 'package:kasrzero_flutter/providers/Filter_provider.dart';
 import 'package:kasrzero_flutter/providers/user_provider.dart';
 import 'package:kasrzero_flutter/services/store.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:searchbar_animation/searchbar_animation.dart';
 import 'package:textfield_search/textfield_search.dart';
+
+import '../models/user_data.dart';
 // import 'package:textfield_search/textfield_search.dart';
 
 class HomeScreen extends StatefulWidget {
+  HomeScreen({required this.currentUser, super.key});
+  UserData currentUser;
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -59,14 +64,15 @@ class _HomeScreenState extends State<HomeScreen> {
         cat = value;
       });
     });
-    Apiproduct.getpro().then((value) => {
-          setState(() {
-            pro = value;
-            pro1 = value;
-          }),
-          pro = pro1,
-          // print(value[0].id)
-        });
+    Apiproduct.getpro().then((value) {
+      for (var ad in widget.currentUser.ads) {
+        value.removeWhere((element) => element.id == ad);
+      }
+      setState(() {
+        pro = value;
+        pro1 = value;
+      });
+    });
   }
 
   void Allcat(String id) {
@@ -245,23 +251,30 @@ class _HomeScreenState extends State<HomeScreen> {
                       ))
                   .toList()
             ])),
-            pro.isEmpty
-                ? Expanded(
-                    flex: 7,
-                    child: Center(
-                      child: Text("No Products"),
-                    ))
+            pro1.isNotEmpty
+                ? pro.isEmpty
+                    ? Expanded(
+                        flex: 7, child: Center(child: Text("No Results")))
+                    : Expanded(
+                        flex: 7,
+                        child: FurnitureListView(
+                          ProductList: pro,
+                          isHorizontal: false,
+                          onTap: (Product) {
+                            print(Product.title);
+                            Navigator.of(context)
+                                .pushNamed("/product", arguments: Product);
+                          },
+                        ))
                 : Expanded(
                     flex: 7,
-                    child: FurnitureListView(
-                      ProductList: pro,
-                      isHorizontal: false,
-                      onTap: (Product) {
-                        print(Product.title);
-                        Navigator.of(context)
-                            .pushNamed("/product", arguments: Product);
-                      },
-                    ))
+                    child: Center(
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: KPrimaryColor,
+                        size: 30,
+                      ),
+                    ),
+                  )
           ],
         ),
       ),

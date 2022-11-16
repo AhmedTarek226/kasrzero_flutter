@@ -48,7 +48,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             UserData currentUser = await userService.getUser(user.email);
             print(currentUser.email);
             Provider.of<UserProvider>(ctx, listen: false).setUser(currentUser);
-            Navigator.pop(ctx);
+            Navigator.pushReplacementNamed(context, '/main');
           }
         }).catchError((err) {
           setState(() {
@@ -67,10 +67,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppBar().preferredSize.height),
-            child: CustomAppBar(Title: "Register Form"),
-          ),
           body: isLoading
               ? Center(
                   child: LoadingAnimationWidget.staggeredDotsWave(
@@ -129,7 +125,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           inputType: TextInputType.text,
                           secure: true,
                           change: (value) {
-                            user.email = value;
+                            user.password = value;
                           },
                         ),
                         SizedBox(
@@ -166,7 +162,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             Text(
                               'I have an account ',
                               style: TextStyle(
-                                  color: Colors.grey[700],
+                                  color: Colors.black87,
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w600),
                             ),

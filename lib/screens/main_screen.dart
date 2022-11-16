@@ -8,6 +8,9 @@ import 'package:kasrzero_flutter/screens/myInfo_screen.dart';
 import 'package:kasrzero_flutter/screens/myWishlist_screen.dart';
 import 'package:kasrzero_flutter/screens/my_account_screen.dart';
 import 'package:kasrzero_flutter/screens/post_ad_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/user_provider.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -34,6 +37,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = Provider.of<UserProvider>(context).getUser();
     return Scaffold(
       extendBody: true,
       bottomNavigationBar: CircleNavBar(
@@ -78,7 +82,7 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           MyWishlistScreen(),
           MyCartScreen(),
-          HomeScreen(),
+          HomeScreen(currentUser: currentUser),
           MyProfileScreen(),
           PostAdScreen(),
         ],

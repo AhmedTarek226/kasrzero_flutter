@@ -83,164 +83,166 @@ class _MyWishlistScreenState extends State<MyWishlistScreen> {
     }
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(AppBar().preferredSize.height),
-        child: CustomAppBar(
-          Title: "My Wishlist",
-          lead: false,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(AppBar().preferredSize.height),
+          child: CustomAppBar(
+            Title: "My Wishlist",
+            lead: false,
+          ),
         ),
-      ),
-      body: currentUser.id != "id"
-          ? Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: wish,
-                    cursorColor: KPrimaryColor,
-                    decoration: InputDecoration(
-                      label: Text(
-                        "Item Name",
-                        style: TextStyle(color: KPrimaryColor, fontSize: 15.sp),
+        body: currentUser.id != "id"
+            ? Padding(
+                padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: wish,
+                      cursorColor: KPrimaryColor,
+                      decoration: InputDecoration(
+                        label: Text(
+                          "Item Name",
+                          style:
+                              TextStyle(color: KPrimaryColor, fontSize: 15.sp),
+                        ),
+                        prefixIcon: Icon(
+                          FontAwesomeIcons.heart,
+                          size: 20,
+                          color: KPrimaryColor,
+                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 5.w),
+                        focusedBorder: styleBorder,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          borderSide: const BorderSide(color: Colors.grey),
+                        ),
+                        errorBorder: styleBorder,
+                        focusedErrorBorder: styleBorder,
+                        errorStyle: TextStyle(color: Colors.grey[700]),
                       ),
-                      prefixIcon: Icon(
-                        FontAwesomeIcons.heart,
-                        size: 20,
-                        color: KPrimaryColor,
-                      ),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 5.w),
-                      focusedBorder: styleBorder,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      errorBorder: styleBorder,
-                      focusedErrorBorder: styleBorder,
-                      errorStyle: TextStyle(color: Colors.grey[700]),
                     ),
-                  ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      DefaultButton(text: "Add", press: () => addToWishlist()),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  Expanded(
-                    child: FutureBuilder(
-                        initialData: [],
-                        future: getData(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(
-                              child: LoadingAnimationWidget.staggeredDotsWave(
-                                color: KPrimaryColor,
-                                size: 30,
-                              ),
-                            );
-                          }
-                          if (snapshot.hasError) {
-                            return Text(snapshot.error.toString());
-                          } else {
-                            if (snapshot.data!.isEmpty) {
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        DefaultButton(
+                            text: "Add", press: () => addToWishlist()),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Expanded(
+                      child: FutureBuilder(
+                          initialData: [],
+                          future: getData(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return Center(
-                                  child: Text('Your wishlist is empty!'));
+                                child: LoadingAnimationWidget.staggeredDotsWave(
+                                  color: KPrimaryColor,
+                                  size: 30,
+                                ),
+                              );
                             }
-                            return RefreshIndicator(
-                              onRefresh: () async {
-                                await getData();
-                                setState(() {});
-                              },
-                              child: ListView.builder(
-                                itemCount: snapshot.data?.length,
-                                itemBuilder: (context, index) {
-                                  var item = snapshot.data![index];
-                                  return Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 5.w, vertical: 8.h),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10.w, vertical: 10.h),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border:
-                                            Border.all(color: Colors.black45),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10))),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "$item",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.black54),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            ElevatedButton(
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all<
-                                                        Color>(Colors.black26),
-                                                shape:
-                                                    MaterialStateProperty.all<
-                                                        RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50),
+                            if (snapshot.hasError) {
+                              return Text(snapshot.error.toString());
+                            } else {
+                              if (snapshot.data!.isEmpty) {
+                                return Center(
+                                    child: Text('Your wishlist is empty!'));
+                              }
+                              return RefreshIndicator(
+                                onRefresh: () async {
+                                  await getData();
+                                  setState(() {});
+                                },
+                                child: ListView.builder(
+                                  itemCount: snapshot.data?.length,
+                                  itemBuilder: (context, index) {
+                                    var item = snapshot.data![index];
+                                    return Container(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 5.w, vertical: 8.h),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10.w, vertical: 10.h),
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border:
+                                              Border.all(color: Colors.black54),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10))),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "$item",
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.black54),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              ElevatedButton(
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all<
+                                                              Color>(
+                                                          Colors.black54),
+                                                  shape:
+                                                      MaterialStateProperty.all<
+                                                          RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                    ),
                                                   ),
                                                 ),
+                                                child: const Text(
+                                                  "Remove",
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                onPressed: () {
+                                                  removeItemFromWishList(item);
+                                                },
                                               ),
-                                              child: const Text(
-                                                "Remove",
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              onPressed: () {
-                                                removeItemFromWishList(item);
-                                              },
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            );
-                          }
-                        }),
-                  ),
-                ],
-              ),
-            )
-          : Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("You should login to show this page !"),
-                  SizedBox(
-                    height: 20.h,
-                  ),
-                  DefaultButton(
-                    press: () => Navigator.pushNamed(context, "/signin"),
-                    text: "Login !",
-                  )
-                ],
-              ),
-            )
-    );
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            }
+                          }),
+                    ),
+                  ],
+                ),
+              )
+            : Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("You should login to show this page !"),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    DefaultButton(
+                      press: () => Navigator.pushNamed(context, "/signin"),
+                      text: "Login !",
+                    )
+                  ],
+                ),
+              ));
   }
 }
